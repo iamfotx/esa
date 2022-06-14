@@ -68,7 +68,6 @@ userSchema.pre<UserDocument>("save", async function cb(next) {
   }
 });
 
-export default mongoose.model<UserDocument, Model<UserDocument>>(
-  "User",
-  userSchema
-);
+// HMR workaround
+export default mongoose.models.User ||
+  mongoose.model<UserDocument, Model<UserDocument>>("User", userSchema);

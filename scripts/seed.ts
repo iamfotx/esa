@@ -3,8 +3,8 @@ import type { User } from "~/types.server";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import invariant from "tiny-invariant";
-import UserModel from "~/models/user.server";
-import EventModel from "~/models/event.server";
+import UserModel from "~/models/user.model.server";
+import EventModel from "~/models/event.model.server";
 import { createFakeEvents } from "~/utils.server";
 dotenv.config();
 
@@ -24,6 +24,7 @@ mongoose.connect(
 );
 
 async function onConnect(err: CallbackError) {
+  console.error(err);
   invariant(!err, "Error connecting to db");
   console.log(`Connected to db!`);
   try {
@@ -50,7 +51,7 @@ async function seed() {
 async function seedEventsCollection(id: ObjectId) {
   try {
     const events = createFakeEvents(id, 100);
-    const bulkEvents = events.map((event) => ({
+    const bulkEvents: any[] = events.map((event) => ({
       updateOne: {
         filter: { slug: event.slug },
         update: { $set: event },

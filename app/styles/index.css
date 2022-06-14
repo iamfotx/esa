@@ -1,0 +1,12 @@
+ul {
+  list-style: none;
+}
+
+.list-item-even,
+.list-item-odd {
+  padding: 20px;
+}
+
+.list-item-even {
+  background-color: #e6e4dc;
+}

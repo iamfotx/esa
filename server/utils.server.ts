@@ -13,7 +13,7 @@ export function createFakeEvents(
       organizer,
       title: `Event ${i}`,
       slug: `event-${i}`,
-      description: faker.lorem.paragraph(),
+      description: faker.lorem.paragraph(1).split(".")[0],
       date: faker.date.future(),
       isVirtual: faker.helpers.arrayElement([true, false]),
       address: faker.address.city(),
@@ -27,3 +27,7 @@ export function createFakeEvents(
   }
   return events;
 }
+
+export const getPage = (searchParams: URLSearchParams) => ({
+  page: Number(searchParams.get("page") || "0"),
+});
