@@ -12,6 +12,7 @@
     "dev:node": "cross-env NODE_ENV=development nodemon server/index.js --watch server/index.js",
     "dev:remix": "cross-env REMIX_DEV_SERVER_WS_PORT=8002 remix watch",
     "start": "cross-env NODE_ENV=production node server/index.js",
+    "seed": "ts-node --require tsconfig-paths/register scripts/seed.ts",
     "format": "./node_modules/.bin/prettier --ignore-path .gitignore --write .",
     "formatcheck": "./node_modules/.bin/prettier --ignore-path .gitignore --list-different .",
     "lint": "./node_modules/.bin/eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
@@ -45,6 +46,8 @@
     "nodemon": "^2.0.16",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.6.2",
+    "ts-node": "^10.8.1",
+    "tsconfig-paths": "^4.0.0",
     "typescript": "^4.6.4"
   },
   "engines": {
