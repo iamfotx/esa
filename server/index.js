@@ -47,16 +47,23 @@ console.log(`Connecting to db...`);
 const port = process.env.PORT || 3000;
 const connectionString = process.env.MONGODB_CONNECTION_STRING;
 invariant(connectionString, "MONGODB_CONNECTION_STRING must be set");
-mongoose.connect(connectionString, (err) => {
-  if (err) {
-    console.error(`Error connecting to db: ${err}`);
-    process.exit(1);
+mongoose.connect(
+  connectionString,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  (err) => {
+    if (err) {
+      console.error(`Error connecting to db: ${err}`);
+      process.exit(1);
+    }
+    console.log(`Connected to db!`);
+    app.listen(port, () => {
+      console.log(`Express server listening on port ${port}`);
+    });
   }
-  console.log(`Connected to db!`);
-  app.listen(port, () => {
-    console.log(`Express server listening on port ${port}`);
-  });
-});
+);
 
 function purgeRequireCache() {
   // purge require cache on requests for "server side HMR" this won't let
