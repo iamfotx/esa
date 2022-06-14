@@ -3,8 +3,8 @@ import type { User } from "~/types.server";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import invariant from "tiny-invariant";
-import UserModel from "~/models/user.server";
-import EventModel from "~/models/event.server";
+import UserModel from "~/models/user.model.server";
+import EventModel from "~/models/event.model.server";
 import { createFakeEvents } from "~/utils.server";
 dotenv.config();
 

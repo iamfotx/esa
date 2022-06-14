@@ -27,3 +27,7 @@ export function createFakeEvents(
   }
   return events;
 }
+
+export const getPage = (searchParams: URLSearchParams) => ({
+  page: Number(searchParams.get("page") || "0"),
+});

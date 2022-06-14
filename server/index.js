@@ -46,12 +46,12 @@ app.all(
 console.log(`Connecting to db...`);
 const port = process.env.PORT || 3000;
 const connectionString = process.env.MONGODB_CONNECTION_STRING;
+const dbName = process.env.MONGODB_DATABASE;
 invariant(connectionString, "MONGODB_CONNECTION_STRING must be set");
 mongoose.connect(
   connectionString,
   {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+    dbName,
   },
   (err) => {
     if (err) {

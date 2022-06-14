@@ -60,7 +60,6 @@ eventSchema.set("toJSON", {
   },
 });
 
-export default mongoose.model<EventDocument, Model<EventDocument>>(
-  "Event",
-  eventSchema
-);
+// HMR workaround
+export default mongoose.models.Event ||
+  mongoose.model<EventDocument, Model<EventDocument>>("Event", eventSchema);
