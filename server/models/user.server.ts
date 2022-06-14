@@ -2,26 +2,31 @@ import type { Document, Model } from "mongoose";
 import type { User } from "~/types.server";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import invariant from "tiny-invariant";
 const SALT_WORK_FACTOR = 10;
 
-interface UserDocument extends User, Document {
+interface UserDocument extends Omit<User, "id" | "password">, Document {
+  password: string;
   comparePassword: (candidatePassword: string) => Promise<boolean>;
   hashPassword: (password: string) => Promise<string>;
 }
 
-const userSchema = new mongoose.Schema<UserDocument, Model<UserDocument>>({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    index: { unique: true },
+const userSchema = new mongoose.Schema<UserDocument, Model<UserDocument>>(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      index: { unique: true },
+    },
+    password: { type: String, required: true },
   },
-  password: { type: String, required: true },
-});
+  { timestamps: true }
+);
 
 // Duplicate the ID field.
 userSchema.virtual("id").get(function () {
-  return this._id.toHexString();
+  return this._id;
 });
 
 // Ensure virtual fields are serialised.
@@ -55,6 +60,7 @@ userSchema.pre<UserDocument>("save", async function cb(next) {
   }
 
   try {
+    invariant(this.password, "user always should");
     this.password = await this.hashPassword(this.password);
     return next();
   } catch (error) {

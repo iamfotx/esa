@@ -1,9 +1,11 @@
-import type { CallbackError } from "mongoose";
+import type { CallbackError, ObjectId } from "mongoose";
 import type { User } from "~/types.server";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import invariant from "tiny-invariant";
 import UserModel from "~/models/user.server";
+import EventModel from "~/models/event.server";
+import { createFakeEvents } from "~/utils.server";
 dotenv.config();
 
 const connectionString = process.env.MONGODB_CONNECTION_STRING;
@@ -37,13 +39,32 @@ async function onConnect(err: CallbackError) {
 async function seed() {
   invariant(adminEmail, "ADMIN_EMAIL must be set");
   invariant(adminPassword, "ADMIN_PASSWORD must be set");
-  await seedAdminUser({ email: adminEmail, password: adminPassword });
-  await seedEventsCollection();
+  const { id } = await seedAdminUser({
+    email: adminEmail,
+    password: adminPassword,
+  });
+  invariant(id, "seedAdminUser must return a user with an id");
+  await seedEventsCollection(id);
 }
 
-async function seedEventsCollection() {}
+async function seedEventsCollection(id: ObjectId) {
+  try {
+    const events = createFakeEvents(id, 100);
+    const bulkEvents = events.map((event) => ({
+      updateOne: {
+        filter: { slug: event.slug },
+        update: { $set: event },
+        upsert: true,
+      },
+    }));
+    await EventModel.bulkWrite(bulkEvents);
+  } catch (err) {
+    console.error(err);
+    invariant(!err, "Error seeding events");
+  }
+}
 
-async function seedAdminUser({ email, password }: User) {
+async function seedAdminUser({ email, password }: User): Promise<User> {
   // cleanup the existing database
   await UserModel.findOneAndDelete({ email });
 
@@ -54,4 +75,5 @@ async function seedAdminUser({ email, password }: User) {
   });
   // save the new user
   await user.save();
+  return user;
 }
