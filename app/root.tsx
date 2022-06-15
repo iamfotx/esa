@@ -15,6 +15,11 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
+import { SocketProvider } from "./context";
+import { useEffect, useState } from "react";
+import type { Socket } from "socket.io-client";
+import io from "socket.io-client";
+
 import { getUser } from "~/session.server";
 
 import rootStyleSheetUrl from "~/styles/root.css";
@@ -41,6 +46,22 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function App() {
   const data = useLoaderData();
+  const [socket, setSocket] = useState<Socket>();
+
+  useEffect(() => {
+    const socket = io();
+    setSocket(socket);
+    return () => {
+      socket.close();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("confirmation", (data) => {
+      console.log(data);
+    });
+  }, [socket]);
   return (
     <html lang="en">
       <head>
@@ -60,7 +81,9 @@ export default function App() {
             </Form>
           </>
         )}
-        <Outlet />
+        <SocketProvider socket={socket}>
+          <Outlet />
+        </SocketProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
