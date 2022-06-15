@@ -9,6 +9,7 @@ export async function getEventsPaginated({
   limit: number;
 }): Promise<Event[]> {
   return EventModel.find()
+    .sort({ createdAt: -1 })
     .skip(page * limit)
     .limit(limit)
     .exec();
