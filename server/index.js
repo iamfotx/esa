@@ -9,6 +9,12 @@ const invariant = require("tiny-invariant");
 const { createRequestHandler } = require("@remix-run/express");
 require("dotenv").config();
 
+const port = process.env.PORT || 3000;
+const connectionString = process.env.MONGODB_CONNECTION_STRING;
+const dbName = process.env.MONGODB_DATABASE;
+invariant(connectionString, "MONGODB_CONNECTION_STRING must be set");
+invariant(dbName, "MONGODB_DATABASE must be set");
+
 const BUILD_DIR = path.join(process.cwd(), "server/build");
 
 const app = express();
@@ -21,22 +27,7 @@ const io = new Server(httpServer);
 
 // Then you can use `io` to listen the `connection` event and get a socket
 // from a client
-io.on("connection", (socket) => {
-  // from this point you are on the WS connection with a specific client
-  console.log(socket.id, "connected");
-
-  socket.emit("confirmation", "connected!");
-
-  // at this point we've mongoose setup, so we can use it
-  mongoose.connection.db
-    .collection("events")
-    .watch()
-    .on("change", (change) => {
-      if (change.operationType === "insert") {
-        socket.emit("EVENT_CREATED", change.fullDocument);
-      }
-    });
-});
+io.on("connection", onSocketConnect);
 
 app.use(compression());
 
@@ -52,44 +43,17 @@ app.use(express.static("public", { maxAge: "1h" }));
 
 app.use(morgan("tiny"));
 
-app.all(
-  "*",
-  process.env.NODE_ENV === "development"
-    ? (req, res, next) => {
-        purgeRequireCache();
-
-        return createRequestHandler({
-          build: require(BUILD_DIR),
-          mode: process.env.NODE_ENV,
-        })(req, res, next);
-      }
-    : createRequestHandler({
-        build: require(BUILD_DIR),
-        mode: process.env.NODE_ENV,
-      })
-);
+app.all("*", setupRequestHandler);
 
 // connect to db and start server
 console.log(`Connecting to db...`);
-const port = process.env.PORT || 3000;
-const connectionString = process.env.MONGODB_CONNECTION_STRING;
-const dbName = process.env.MONGODB_DATABASE;
-invariant(connectionString, "MONGODB_CONNECTION_STRING must be set");
+
 mongoose.connect(
   connectionString,
   {
     dbName,
   },
-  (err) => {
-    if (err) {
-      console.error(`Error connecting to db: ${err}`);
-      process.exit(1);
-    }
-    console.log(`Connected to db!`);
-    httpServer.listen(port, () => {
-      console.log(`Express server listening on port ${port}`);
-    });
-  }
+  onMongooseConnect
 );
 
 function purgeRequireCache() {
@@ -103,4 +67,44 @@ function purgeRequireCache() {
       delete require.cache[key];
     }
   }
+}
+
+function onMongooseConnect(error) {
+  if (error) {
+    console.error(`Error connecting to db: ${error}`);
+    process.exit(1);
+  }
+  console.log(`Connected to db!`);
+
+  // start the server
+  httpServer.listen(port, () => {
+    console.log(`Express server listening on port ${port}`);
+  });
+}
+
+function setupRequestHandler(req, res, next) {
+  return process.env.NODE_ENV === "development"
+    ? (req, res, next) => {
+        purgeRequireCache();
+
+        return createRequestHandler({
+          build: require(BUILD_DIR),
+          mode: process.env.NODE_ENV,
+        })(req, res, next);
+      }
+    : createRequestHandler({
+        build: require(BUILD_DIR),
+        mode: process.env.NODE_ENV,
+      });
+}
+
+function onSocketConnect(socket) {
+  mongoose.connection.db
+    .collection("events")
+    .watch()
+    .on("change", (change) => {
+      if (change.operationType === "insert") {
+        socket.emit("EVENT_CREATED", change.fullDocument);
+      }
+    });
 }
