@@ -63,7 +63,10 @@ export default function Index() {
     if (!socket) return;
 
     socket.on("EVENT_CREATED", (data) => {
-      console.log(data);
+      setEvents((prevEvents) => [data, ...prevEvents]);
+      window.scrollTo(0, 0);
+      // TODO: hack
+      data.totalEvents = data.totalEvents + 1;
     });
   }, [socket]);
 
