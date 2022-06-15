@@ -13,7 +13,7 @@ ESA emits events created in real-time using [Remix.run](https://remix.run/docs),
 - Through nested routes, Remix can eliminate nearly every loading state.
 - Your websites run into problems, but with Remix they don’t need to be refreshed. Error handling is hard to remember and hard to do. That’s why it’s built in.
 
-# Areas that could be improved?
+# Areas that could be improved and given some more thoughts?
 
 - Styling - Current state is horrible (honestly, couldn't even write a bit).
 - React pages/components can further be optimized using native react performance techniques to prevent unnecessary renders i.e with the uses of these hooks -> `useCallback`, `useMemo`, `React.memo`.
@@ -24,20 +24,24 @@ ESA emits events created in real-time using [Remix.run](https://remix.run/docs),
 
 ## Development
 
-> Make sure you've correct .env file in the root of the project - if you need one shoot me an email at: `iamfotx@gmail.com`.
+> Make sure you've correct .env file in the root of the project - if you need one shoot me an email at: iamfotx@gmail.com.
 > Clone the repo and run `yarn` to install dependencies.
 
-- Seed the DB
+Seed the DB
 
-  - `yarn seed`
+```sh
+yarn seed
+```
 
-- Start the Remix development asset server and the Express server by running:
+Start the Remix development asset server and the Express server by running:
 
-  - `yarn dev`
+```sh
+yarn dev
+```
 
 This starts your app in development mode, which will purge the server require cache when Remix rebuilds assets so you don't need a process manager restarting the express server.
 
-- Visit [localhost:3000](http://localhost:3000/) in your browser.
+Visit [localhost:3000](http://localhost:3000/) in your browser.
 
 ## Deployment
 
