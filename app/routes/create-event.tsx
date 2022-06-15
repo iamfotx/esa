@@ -7,7 +7,6 @@ import invariant from "tiny-invariant";
 import { getUserId, requireUser } from "~/session.server";
 import { getDateStr, validateSlug } from "~/utils";
 import { createEvent } from "~/event.server";
-import type { Event } from "~/types.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   await requireUser(request);
@@ -16,9 +15,9 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 enum Category {
   AI = "AI",
-  MOBILE_DEVELOPMENT = "Mobile Development",
-  WEB_DEVELOPMENT = "Web Development",
-  DATA_SCIENCE = "Data Science",
+  MOBILE_DEVELOPMENT = "MOBILE_DEVELOPMENT",
+  WEB_DEVELOPMENT = "WEB_DEVELOPMENT",
+  DATA_SCIENCE = "DATA_SCIENCE",
 }
 
 type ActionData =
@@ -41,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
   const category = formData.get("category");
   const isVirtual = formData.get("isVirtual") === "on" ? true : false;
   const address = formData.get("address");
-  // const redirectTo = safeRedirect(formData.get("redirectTo"), "/create-event");
+
   const errors: ActionData = {
     title: title ? null : "Title is required",
     slug: validateSlug(slug) ? null : "Slug is invalid",

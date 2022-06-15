@@ -18,6 +18,7 @@ ESA emits events created in real-time using [Remix.run](https://remix.run/docs),
 - Styling - Current state is horrible (honestly, couldn't even write a bit).
 - React pages/components can further be optimized using native react performance techniques to prevent unnecessary renders i.e with the uses of these hooks -> `useCallback`, `useMemo`, `React.memo`.
 - Components/Files can be more modular.
+- Error Handling - Currently, the error handling is very basic.
 - Testing
 - Cleanup work can be done.
 

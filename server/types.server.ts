@@ -17,13 +17,13 @@ export type Event = BaseEntity & {
   isVirtual: boolean;
   address: string;
   date: Date;
-  category: Category;
+  category: keyof typeof Category;
   organizer: User["id"];
 };
 
 export enum Category {
   AI = "AI",
-  MOBILE_DEVELOPMENT = "Mobile Development",
-  WEB_DEVELOPMENT = "Web Development",
-  DATA_SCIENCE = "Data Science",
+  MOBILE_DEVELOPMENT = "MOBILE_DEVELOPMENT",
+  WEB_DEVELOPMENT = "WEB_DEVELOPMENT",
+  DATA_SCIENCE = "DATA_SCIENCE",
 }

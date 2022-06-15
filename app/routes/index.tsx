@@ -5,7 +5,7 @@ import { useFetcher, useLoaderData } from "@remix-run/react";
 import { getPage } from "~/utils.server";
 import { getEventsPaginated, countEvents } from "~/event.server";
 import { json } from "@remix-run/node";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useSocket } from "~/context";
 
 import indexStyleSheetUrl from "~/styles/index.css";
@@ -42,7 +42,18 @@ export default function Index() {
   const page = useRef(0);
   const canFetchMore = events.length < data.totalEvents;
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (
+  //     canFetchMore &&
+  //     fetcher.state === "idle" &&
+  //     page.current < events.length / PAGE_LIMIT
+  //   ) {
+  //     page.current += 1;
+  //     fetcher.load(`/?index&page=${page.current}`);
+  //   }
+  // }, [canFetchMore, fetcher, events.length, page]);
+
+  const fetchMore = useCallback(() => {
     if (
       canFetchMore &&
       fetcher.state === "idle" &&
@@ -77,7 +88,15 @@ export default function Index() {
         const isLoaderRow = index === events.length - 1;
         return isLoaderRow ? (
           <div key={"loader-row"}>
-            {canFetchMore ? "Loading more..." : "Nothing to load..."}
+            {canFetchMore ? (
+              fetcher.state == "loading" ? (
+                "loading more..."
+              ) : (
+                <button onClick={fetchMore}>load more</button>
+              )
+            ) : (
+              "Nothing to load..."
+            )}
           </div>
         ) : (
           <div

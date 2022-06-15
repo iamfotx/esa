@@ -82,7 +82,8 @@ export function validateSlug(slug: unknown): slug is string {
 export function getDateStr(): string {
   const date = new Date();
   const year = date.getFullYear();
-  const month = date.getMonth() + 1;
+  const m = date.getMonth() + 1;
+  const fullMonth = m < 10 ? `0${m}` : m;
   const day = date.getDate();
-  return `${year}-${month}-${day}`;
+  return `${year}-${fullMonth}-${day}`;
 }

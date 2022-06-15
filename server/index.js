@@ -43,7 +43,22 @@ app.use(express.static("public", { maxAge: "1h" }));
 
 app.use(morgan("tiny"));
 
-app.all("*", setupRequestHandler);
+app.all(
+  "*",
+  process.env.NODE_ENV === "development"
+    ? (req, res, next) => {
+        purgeRequireCache();
+
+        return createRequestHandler({
+          build: require(BUILD_DIR),
+          mode: process.env.NODE_ENV,
+        })(req, res, next);
+      }
+    : createRequestHandler({
+        build: require(BUILD_DIR),
+        mode: process.env.NODE_ENV,
+      })
+);
 
 // connect to db and start server
 console.log(`Connecting to db...`);
@@ -82,29 +97,14 @@ function onMongooseConnect(error) {
   });
 }
 
-function setupRequestHandler(req, res, next) {
-  return process.env.NODE_ENV === "development"
-    ? (req, res, next) => {
-        purgeRequireCache();
-
-        return createRequestHandler({
-          build: require(BUILD_DIR),
-          mode: process.env.NODE_ENV,
-        })(req, res, next);
-      }
-    : createRequestHandler({
-        build: require(BUILD_DIR),
-        mode: process.env.NODE_ENV,
-      });
-}
-
 function onSocketConnect(socket) {
   mongoose.connection.db
     .collection("events")
     .watch()
     .on("change", (change) => {
       if (change.operationType === "insert") {
-        socket.emit("EVENT_CREATED", change.fullDocument);
+        const { _id: id, __v, ...event } = change.fullDocument;
+        socket.emit("EVENT_CREATED", { ...event, id });
       }
     });
 }
