@@ -1,16 +1,43 @@
-# Welcome to Remix!
+# ESA - Event Sourcing Application!
 
-- [Remix Docs](https://remix.run/docs)
+ESA emits events created in real-time using [Remix.run](https://remix.run/docs), Socket.io, and Mongoose!
+
+# Why Remix?
+
+[Remix.run](https://remix.run/docs) is a full stack web framework that lets you focus on the user interface and work back through web standards to deliver a fast, slick, and resilient user experience. People are gonna love using your stuff.
+
+### Things you get out of the box with Remix.run:
+
+- It handles race conditions, cancellations, errors, and revalidations w/o even coding anything at all. It's baked in the framework.
+- Most web apps fetch inside of components, creating request waterfalls, slower loads, and jank. Remix loads data in parallel on the server and sends a fully formed HTML document. Way faster, jank free.
+- Through nested routes, Remix can eliminate nearly every loading state.
+- Your websites run into problems, but with Remix they don’t need to be refreshed. Error handling is hard to remember and hard to do. That’s why it’s built in.
+
+# Areas that could be improved?
+
+- Styling - Current state is horrible (honestly, couldn't even write a bit).
+- React pages/components can further be optimized using native react performance techniques to prevent unnecessary renders i.e with the uses of these hooks -> `useCallback`, `useMemo`, `React.memo`.
+- Components/Files can be more modular.
+- Error Handling - Currently, the error handling is very basic.
+- Testing
+- Cleanup work can be done.
 
 ## Development
 
-Start the Remix development asset server and the Express server by running:
+> Make sure you've correct .env file in the root of the project - if you need one shoot me an email at: `iamfotx@gmail.com`.
+> Clone the repo and run `yarn` to install dependencies.
 
-```sh
-npm run dev
-```
+- Seed the DB
+
+  - `yarn seed`
+
+- Start the Remix development asset server and the Express server by running:
+
+  - `yarn dev`
 
 This starts your app in development mode, which will purge the server require cache when Remix rebuilds assets so you don't need a process manager restarting the express server.
+
+- Visit [localhost:3000](http://localhost:3000/) in your browser.
 
 ## Deployment
 
@@ -31,21 +58,3 @@ Now you'll need to pick a host to deploy it to.
 ### DIY
 
 If you're familiar with deploying express applications you should be right at home just make sure to deploy the output of `remix build`
-
-- `build/`
-- `public/build/`
-
-### Using a Template
-
-When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new project, then copy over your `app/` folder to the new project that's pre-configured for your target server.
-
-```sh
-cd ..
-# create a new project, and pick a pre-configured host
-npx create-remix@latest
-cd my-new-remix-app
-# remove the new project's app (not the old one!)
-rm -rf app
-# copy your app over
-cp -R ../my-old-remix-app/app app
-```

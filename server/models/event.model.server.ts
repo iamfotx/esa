@@ -35,7 +35,7 @@ const eventSchema = new mongoose.Schema<EventDocument, Model<EventDocument>>(
     },
     category: {
       type: String,
-      enum: Category,
+      enum: Object.values(Category),
       required: true,
     },
     organizer: {
