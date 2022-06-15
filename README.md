@@ -11,10 +11,10 @@ This section illustrates what this application is capable of doing and what page
 ### Home Page (`/`);
 
 - It displays a list of first 20 events sorted by `createdAt` in descending order that are currently in the system.
-    > if you see none, please be sure to follow `seed the DB` step listed under [Development](#development) section.
+  > if you see none, please be sure to follow `seed the DB` step listed under [Development](#development) section.
 - One can scroll down to the bottom and will see a button `Load More` that will load the next 20 events unless it reaches to the end and replaces the button with `No More Events`.
 
-- If a user is somewhere in the middle of the list and a new events is created from a different device/window, the list will be updated and the user will be scrolled to the top of the list. 
+- If a user is somewhere in the middle of the list and a new events is created from a different device/window, the list will be updated and the user will be scrolled to the top of the list.
 
 ### Login Page (`/login`);
 
@@ -30,7 +30,6 @@ This section illustrates what this application is capable of doing and what page
 - It displays a form to create an event.
 - Once the user submits the form, it creates an event and redirects to the [Home Page](#home-page-).
 - If the user is not logged in, it redirects to the [Home Page](#home-page-).
-
 
 # Why Remix?
 
