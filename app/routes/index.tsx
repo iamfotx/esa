@@ -6,6 +6,7 @@ import { getPage } from "~/utils.server";
 import { getEventsPaginated, countEvents } from "~/event.server";
 import { json } from "@remix-run/node";
 import { useEffect, useRef, useState } from "react";
+import { useSocket } from "~/context";
 
 import indexStyleSheetUrl from "~/styles/index.css";
 
@@ -34,6 +35,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Index() {
+  const socket = useSocket();
   const data = useLoaderData<LoaderData>();
   const [events, setEvents] = useState(data.events);
   const fetcher = useFetcher();
@@ -56,6 +58,15 @@ export default function Index() {
       setEvents((prevEvents) => [...prevEvents, ...fetcher.data.events]);
     }
   }, [fetcher.data]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("EVENT_CREATED", (data) => {
+      console.log(data);
+    });
+  }, [socket]);
+
   return (
     <main>
       <h1>Organized Events</h1>
@@ -67,7 +78,7 @@ export default function Index() {
           </div>
         ) : (
           <div
-            key={event.slug}
+            key={`${event.slug}-${index}`}
             className={index % 2 ? "list-item-odd" : "list-item-even"}
           >
             <pre>{JSON.stringify(event, null, 4)}</pre>

@@ -1,5 +1,7 @@
 const path = require("path");
 const express = require("express");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
 const compression = require("compression");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -10,6 +12,31 @@ require("dotenv").config();
 const BUILD_DIR = path.join(process.cwd(), "server/build");
 
 const app = express();
+
+// You need to create the HTTP server from the Express app
+const httpServer = createServer(app);
+
+// And then attach the socket.io server to the HTTP server
+const io = new Server(httpServer);
+
+// Then you can use `io` to listen the `connection` event and get a socket
+// from a client
+io.on("connection", (socket) => {
+  // from this point you are on the WS connection with a specific client
+  console.log(socket.id, "connected");
+
+  socket.emit("confirmation", "connected!");
+
+  // at this point we've mongoose setup, so we can use it
+  mongoose.connection.db
+    .collection("events")
+    .watch()
+    .on("change", (change) => {
+      if (change.operationType === "insert") {
+        socket.emit("EVENT_CREATED", change.fullDocument);
+      }
+    });
+});
 
 app.use(compression());
 
@@ -59,7 +86,7 @@ mongoose.connect(
       process.exit(1);
     }
     console.log(`Connected to db!`);
-    app.listen(port, () => {
+    httpServer.listen(port, () => {
       console.log(`Express server listening on port ${port}`);
     });
   }
