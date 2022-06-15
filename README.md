@@ -2,6 +2,35 @@
 
 ESA emits events created in real-time using [Remix.run](https://remix.run/docs), Socket.io, and Mongoose!
 
+# About the Application
+
+This section illustrates what this application is capable of doing and what pages are available.
+
+## Public Routes
+
+### Home Page (`/`);
+
+- It displays a list of first 20 events sorted by `createdAt` in descending order that are currently in the system.
+  > if you see none, please be sure to follow `seed the DB` step listed under [Development](#development) section.
+- One can scroll down to the bottom and will see a button `Load More` that will load the next 20 events unless it reaches to the end and replaces the button with `No More Events`.
+
+- If a user is somewhere in the middle of the list and a new events is created from a different device/window, the list will be updated and the user will be scrolled to the top of the list.
+
+### Login Page (`/login`);
+
+> There's no way to sign up for the app. But you can create a user with the help of Seed Script. See [Seed the DB](#seed-the-db).
+
+- It displays a login form.
+- If the user is already logged in, it redirects to the [Create Event Page](#create-event-page-create-event).
+
+## Protected Routes
+
+### Create Event Page (`/create-event`);
+
+- It displays a form to create an event.
+- Once the user submits the form, it creates an event and redirects to the [Home Page](#home-page-).
+- If the user is not logged in, it redirects to the [Home Page](#home-page-).
+
 # Why Remix?
 
 [Remix.run](https://remix.run/docs) is a full stack web framework that lets you focus on the user interface and work back through web standards to deliver a fast, slick, and resilient user experience. People are gonna love using your stuff.
@@ -27,11 +56,15 @@ ESA emits events created in real-time using [Remix.run](https://remix.run/docs),
 > Make sure you've correct .env file in the root of the project - if you need one shoot me an email at: iamfotx@gmail.com.
 > Clone the repo and run `yarn` to install dependencies.
 
-Seed the DB
+### Seed the DB
+
+This command will seed the database with some events along with an admin user with the email & password passed via `.env` file. Which you can then use to create more events.
 
 ```sh
 yarn seed
 ```
+
+### Run the server
 
 Start the Remix development asset server and the Express server by running:
 
