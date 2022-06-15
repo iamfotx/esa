@@ -18,3 +18,8 @@ export async function getEventsPaginated({
 export async function countEvents(): Promise<number> {
   return EventModel.countDocuments({});
 }
+
+export async function createEvent(event: Event): Promise<void> {
+  const newEvent = new EventModel(event);
+  await newEvent.save();
+}

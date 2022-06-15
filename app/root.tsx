@@ -69,18 +69,20 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <NavItem to="/">Events</NavItem>
-        {!data?.user && <NavItem to="/login">Login</NavItem>}
-        {data?.user && (
-          <>
-            <NavItem to="/create-event">Create Event</NavItem>
-            <Form method="post" action="/logout" className="logout-form">
-              <button className="logout" type="submit">
-                Logout
-              </button>
-            </Form>
-          </>
-        )}
+        <div className="navbar">
+          <NavItem to="/">Events</NavItem>
+          {!data?.user && <NavItem to="/login">Login</NavItem>}
+          {data?.user && (
+            <>
+              <NavItem to="/create-event">Create Event</NavItem>
+              <Form method="post" action="/logout" className="logout-form">
+                <button className="logout" type="submit">
+                  Logout
+                </button>
+              </Form>
+            </>
+          )}
+        </div>
         <SocketProvider socket={socket}>
           <Outlet />
         </SocketProvider>

@@ -69,3 +69,20 @@ export function useUser(): User {
 export function validateEmail(email: unknown): email is string {
   return typeof email === "string" && email.length > 3 && email.includes("@");
 }
+
+export function validateSlug(slug: unknown): slug is string {
+  return (
+    typeof slug === "string" &&
+    slug.length > 3 &&
+    slug.includes("-") &&
+    !slug.includes(" ")
+  );
+}
+
+export function getDateStr(): string {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  return `${year}-${month}-${day}`;
+}
