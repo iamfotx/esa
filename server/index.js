@@ -33,7 +33,8 @@ io.on("connection", (socket) => {
     .watch()
     .on("change", (change) => {
       if (change.operationType === "insert") {
-        socket.emit("EVENT_CREATED", change.fullDocument);
+        const { _id: id, _v, ...event } = change.fullDocument;
+        socket.emit("EVENT_CREATED", { ...event, id });
       }
     });
 });
