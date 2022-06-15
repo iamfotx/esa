@@ -29,7 +29,6 @@ const io = new Server(httpServer);
 // from a client
 io.on("connection", onSocketConnect);
 
-
 app.use(compression());
 
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header

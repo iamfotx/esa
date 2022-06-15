@@ -6,14 +6,12 @@ ESA emits events created in real-time using [Remix.run](https://remix.run/docs),
 
 [Remix.run](https://remix.run/docs) is a full stack web framework that lets you focus on the user interface and work back through web standards to deliver a fast, slick, and resilient user experience. People are gonna love using your stuff.
 
-
 ### Things you get out of the box with Remix.run:
 
 - It handles race conditions, cancellations, errors, and revalidations w/o even coding anything at all. It's baked in the framework.
 - Most web apps fetch inside of components, creating request waterfalls, slower loads, and jank. Remix loads data in parallel on the server and sends a fully formed HTML document. Way faster, jank free.
 - Through nested routes, Remix can eliminate nearly every loading state.
 - Your websites run into problems, but with Remix they don’t need to be refreshed. Error handling is hard to remember and hard to do. That’s why it’s built in.
-
 
 # Areas that could be improved?
 
@@ -29,6 +27,7 @@ ESA emits events created in real-time using [Remix.run](https://remix.run/docs),
 > Clone the repo and run `yarn` to install dependencies.
 
 - Seed the DB
+
   - `yarn seed`
 
 - Start the Remix development asset server and the Express server by running:
